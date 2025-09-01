@@ -601,6 +601,8 @@ class HazardAssessmentApp {
         const container = document.getElementById('resultsList');
         let draggedElement = null;
         let draggedIndex = -1;
+        let currentDropTarget = null;
+        let insertBefore = true;
 
         // Add event listeners to all risk items
         container.querySelectorAll('.risk-item').forEach((item, index) => {
@@ -611,21 +613,42 @@ class HazardAssessmentApp {
                 
                 e.dataTransfer.effectAllowed = 'move';
                 e.dataTransfer.setData('text/plain', index.toString());
+                
+                // Add visual feedback
+                item.style.transform = 'scale(0.95)';
             });
 
             item.addEventListener('dragend', (e) => {
                 item.classList.remove('opacity-50');
-                // Remove all drop indicators
+                item.style.transform = '';
+                
+                // Remove all drop indicators and reset variables
                 container.querySelectorAll('.drop-indicator').forEach(indicator => {
                     indicator.remove();
                 });
+                
+                draggedElement = null;
+                draggedIndex = -1;
+                currentDropTarget = null;
+            });
+
+            item.addEventListener('dragenter', (e) => {
+                e.preventDefault();
+                if (draggedElement && draggedElement !== item) {
+                    item.classList.add('bg-blue-50');
+                }
+            });
+
+            item.addEventListener('dragleave', (e) => {
+                e.preventDefault();
+                item.classList.remove('bg-blue-50');
             });
 
             item.addEventListener('dragover', (e) => {
                 e.preventDefault();
                 e.dataTransfer.dropEffect = 'move';
                 
-                if (draggedElement !== item) {
+                if (draggedElement && draggedElement !== item) {
                     // Remove existing indicators
                     container.querySelectorAll('.drop-indicator').forEach(indicator => {
                         indicator.remove();
@@ -633,12 +656,17 @@ class HazardAssessmentApp {
                     
                     const rect = item.getBoundingClientRect();
                     const midpoint = rect.top + rect.height / 2;
+                    const currentItemIndex = parseInt(item.dataset.index);
+                    
+                    // Determine if we should insert before or after this item
+                    insertBefore = e.clientY < midpoint;
+                    currentDropTarget = currentItemIndex;
                     
                     // Create drop indicator
                     const indicator = document.createElement('div');
-                    indicator.className = 'drop-indicator bg-blue-400 h-1 rounded-full mx-4 my-2';
+                    indicator.className = 'drop-indicator bg-blue-500 h-2 rounded-full mx-6 my-1 transition-all duration-200';
                     
-                    if (e.clientY < midpoint) {
+                    if (insertBefore) {
                         item.parentNode.insertBefore(indicator, item);
                     } else {
                         item.parentNode.insertBefore(indicator, item.nextSibling);
@@ -648,13 +676,31 @@ class HazardAssessmentApp {
 
             item.addEventListener('drop', (e) => {
                 e.preventDefault();
-                const targetIndex = index;
+                item.classList.remove('bg-blue-50');
                 
-                if (draggedIndex !== targetIndex && draggedIndex !== -1) {
-                    this.reorderRisks(draggedIndex, targetIndex);
+                if (draggedIndex !== -1 && currentDropTarget !== null) {
+                    // Calculate the actual target index based on drop position
+                    let targetIndex = currentDropTarget;
+                    
+                    // If we're inserting after the target item, increment the index
+                    if (!insertBefore) {
+                        targetIndex++;
+                    }
+                    
+                    // If dragging down and the target is after the dragged item,
+                    // we need to adjust because we'll remove the dragged item first
+                    if (draggedIndex < targetIndex) {
+                        targetIndex--;
+                    }
+                    
+                    // Ensure target index is within bounds
+                    targetIndex = Math.max(0, Math.min(targetIndex, this.rankedRisks.length - 1));
+                    
+                    // Only reorder if the position actually changed
+                    if (draggedIndex !== targetIndex) {
+                        this.reorderRisksImproved(draggedIndex, targetIndex);
+                    }
                 }
-                
-                draggedIndex = -1;
                 
                 // Clean up indicators
                 container.querySelectorAll('.drop-indicator').forEach(indicator => {
@@ -663,14 +709,15 @@ class HazardAssessmentApp {
             });
         });
 
-        // Handle drops on container (between items)
+        // Handle drops on container (for edge cases)
         container.addEventListener('dragover', (e) => {
             e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
         });
 
         container.addEventListener('drop', (e) => {
             e.preventDefault();
-            // Clean up indicators
+            // Clean up any remaining indicators
             container.querySelectorAll('.drop-indicator').forEach(indicator => {
                 indicator.remove();
             });
@@ -689,6 +736,38 @@ class HazardAssessmentApp {
         // Move the risk in the array
         const movedRisk = this.rankedRisks.splice(fromIndex, 1)[0];
         this.rankedRisks.splice(adjustedToIndex, 0, movedRisk);
+        
+        // Mark all items as user overrides (since order was manually changed)
+        this.rankedRisks.forEach((risk, index) => {
+            this.userOverrides.set(risk.hazard.id, index + 1);
+        });
+        
+        // Show reset button
+        document.getElementById('resetRankings').classList.remove('hidden');
+        
+        // Re-render the results
+        this.displayResults(this.rankedRisks);
+    }
+    
+    reorderRisksImproved(fromIndex, toIndex) {
+        console.log(`Improved reorder: Moving from ${fromIndex} to ${toIndex}`);
+        
+        // Validate indices
+        if (fromIndex < 0 || fromIndex >= this.rankedRisks.length ||
+            toIndex < 0 || toIndex >= this.rankedRisks.length ||
+            fromIndex === toIndex) {
+            console.log('Invalid reorder indices, skipping');
+            return;
+        }
+        
+        // Move the risk in the array using a more reliable method
+        const movedRisk = this.rankedRisks[fromIndex];
+        
+        // Remove from old position
+        this.rankedRisks.splice(fromIndex, 1);
+        
+        // Insert at new position
+        this.rankedRisks.splice(toIndex, 0, movedRisk);
         
         // Mark all items as user overrides (since order was manually changed)
         this.rankedRisks.forEach((risk, index) => {
