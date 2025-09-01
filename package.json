@@ -1,0 +1,64 @@
+{
+  "name": "hazard-risk-assessment-framework",
+  "version": "1.0.0",
+  "description": "Professional HIRA-compliant risk assessment framework with interactive web interface for hazard identification and risk management.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "dev": "node server.js",
+    "build": "tsc",
+    "start": "node server.js",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "lint": "eslint src/**/*.ts",
+    "lint:fix": "eslint src/**/*.ts --fix",
+    "clean": "rimraf dist",
+    "prebuild": "npm run clean",
+    "postbuild": "cp package.json dist/",
+    "serve": "serve -s . -p 4501"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/hazard-risk-assessment-framework.git"
+  },
+  "keywords": [
+    "hazard",
+    "risk",
+    "assessment",
+    "hira",
+    "risk-management",
+    "emergency-planning",
+    "safety",
+    "typescript",
+    "web-app",
+    "risk-analysis"
+  ],
+  "author": "Nick Deshpande",
+  "license": "MIT",
+  "dependencies": {
+    "typescript": "^5.3.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.0",
+    "@types/node": "^20.10.0",
+    "@typescript-eslint/eslint-plugin": "^6.15.0",
+    "@typescript-eslint/parser": "^6.15.0",
+    "eslint": "^8.56.0",
+    "jest": "^29.7.0",
+    "rimraf": "^5.0.5",
+    "serve": "^14.2.1",
+    "ts-jest": "^29.1.1"
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  },
+  "files": [
+    "dist/**/*",
+    "index.html",
+    "app.js",
+    "README.md",
+    "LICENSE"
+  ]
+}
