@@ -6,17 +6,17 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "dev": "node server.js",
-    "build": "tsc",
+    "build": "tsc && npm run build:public",
+    "build:public": "mkdir -p public && cp index.html app.js public/ && cp -r dist public/ 2>/dev/null || true",
     "start": "node server.js",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "lint": "eslint src/**/*.ts",
     "lint:fix": "eslint src/**/*.ts --fix",
-    "clean": "rimraf dist",
+    "clean": "rimraf dist public",
     "prebuild": "npm run clean",
-    "postbuild": "cp package.json dist/",
-    "serve": "serve -s . -p 4501"
+    "serve": "serve -s public -p 4501"
   },
   "repository": {
     "type": "git",
