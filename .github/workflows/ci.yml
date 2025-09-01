@@ -67,12 +67,12 @@ jobs:
 
     - name: Deploy to Vercel (Preview)
       uses: amondnet/vercel-action@v25
+      if: contains(github.event.pull_request.title, '[deploy]') || contains(github.event.pull_request.body, '[deploy]')
       with:
         vercel-token: ${{ secrets.VERCEL_TOKEN }}
         github-token: ${{ secrets.GITHUB_TOKEN }}
-        vercel-args: '--prod'
-        vercel-org-id: ${{ secrets.ORG_ID }}
-        vercel-project-id: ${{ secrets.PROJECT_ID }}
+        vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+        vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
         scope: ${{ secrets.VERCEL_ORG_ID }}
 
   deploy-production:
@@ -102,8 +102,8 @@ jobs:
         vercel-token: ${{ secrets.VERCEL_TOKEN }}
         github-token: ${{ secrets.GITHUB_TOKEN }}
         vercel-args: '--prod'
-        vercel-org-id: ${{ secrets.ORG_ID }}
-        vercel-project-id: ${{ secrets.PROJECT_ID }}
+        vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+        vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
         scope: ${{ secrets.VERCEL_ORG_ID }}
 
     - name: Create Release
