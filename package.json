@@ -1,6 +1,6 @@
 {
   "name": "hazard-risk-assessment-framework",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Professional HIRA-compliant risk assessment framework with interactive web interface for hazard identification and risk management.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
