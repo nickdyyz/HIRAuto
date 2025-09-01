@@ -713,6 +713,51 @@ class HazardAssessmentApp {
         this.calculateRiskRankings();
     }
 
+    changePriority(hazardId, newPriority, currentIndex) {
+        const newPriorityNum = parseInt(newPriority);
+        const maxPriority = this.rankedRisks.length;
+        
+        // Validate input range
+        if (newPriorityNum < 1 || newPriorityNum > maxPriority || isNaN(newPriorityNum)) {
+            // Reset to current position if invalid
+            this.displayResults(this.rankedRisks);
+            return;
+        }
+        
+        // Don't do anything if priority hasn't changed
+        if (newPriorityNum === currentIndex + 1) {
+            return;
+        }
+        
+        // Calculate the target index (priority is 1-based, index is 0-based)
+        const targetIndex = newPriorityNum - 1;
+        
+        // Move the risk to the new position
+        const riskToMove = this.rankedRisks.splice(currentIndex, 1)[0];
+        this.rankedRisks.splice(targetIndex, 0, riskToMove);
+        
+        // Mark all items as user overrides and update their priority numbers
+        this.rankedRisks.forEach((risk, index) => {
+            this.userOverrides.set(risk.hazard.id, index + 1);
+        });
+        
+        // Show reset button since user made manual changes
+        document.getElementById('resetRankings').classList.remove('hidden');
+        
+        // Re-render with new order
+        this.displayResults(this.rankedRisks);
+    }
+    
+    validatePriorityInput(inputElement, originalPriority) {
+        const value = parseInt(inputElement.value);
+        const maxPriority = this.rankedRisks.length;
+        
+        // If invalid input, reset to original
+        if (isNaN(value) || value < 1 || value > maxPriority) {
+            inputElement.value = originalPriority;
+        }
+    }
+
     getRiskColor(level) {
         switch(level) {
             case 'Extreme': return '#8B0000';       // Dark Red
