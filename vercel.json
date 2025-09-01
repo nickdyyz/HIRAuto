@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "name": "hazard-risk-assessment-framework",
+  "name": "hirauto",
   "builds": [
     {
       "src": "package.json",

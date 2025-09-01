@@ -1,4 +1,4 @@
-# Hazard Risk Assessment Framework (HIRA)
+# HIRAuto - Automated Hazard Risk Assessment Framework
 
 🚀 **Professional Risk Management System** | ⚡ **HIRA-Compliant Scoring** | 🎯 **Interactive Risk Prioritization**
 
@@ -60,8 +60,8 @@ The Hazard Risk Assessment Framework is a comprehensive web-based system designe
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/yourusername/hazard-risk-assessment-framework.git
-   cd hazard-risk-assessment-framework
+   git clone https://github.com/nickdyyz/HIRAuto.git
+   cd HIRAuto
    ```
 
 2. **Install dependencies:**
@@ -273,4 +273,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **Made with ❤️ for Professional Risk Management**
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/yourusername/hazard-risk-assessment-framework)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/nickdyyz/HIRAuto)

@@ -1,6 +1,7 @@
 export const validateRiskData = (data: any): boolean => {
     // Implement validation logic for risk data
-    return true; // Placeholder return value
+    if (!data) return false;
+    return typeof data === 'object' && data !== null;
 };
 
 export const formatRiskReport = (report: any): string => {

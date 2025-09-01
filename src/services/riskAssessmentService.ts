@@ -1,4 +1,4 @@
-import { Hazard, Risk, RiskAssessmentResult } from '../models/risk';
+import { Hazard, RiskAssessmentResult } from '../models/risk';
 import { assessMultipleRisks } from '../logic/assessment';
 import { HazardService } from './hazardService';
 
