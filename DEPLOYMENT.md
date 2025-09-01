@@ -29,7 +29,7 @@ Click the button above to deploy HIRAuto to Vercel in one click!
    - **Project Name**: `hirauto` (or customize)
    - **Framework Preset**: Other
    - **Build Command**: `npm run build` (auto-detected)
-   - **Output Directory**: `.` (auto-detected)
+   - **Output Directory**: `public` (auto-detected)
    - **Install Command**: `npm install` (auto-detected)
 
 4. **Deploy**
